@@ -13,7 +13,9 @@ public:
     std::chrono::sys_days parseDate(const std::string &dateStr);
 
     void addEvents(std::chrono::sys_days date, const std::string &description);
+    void deleteEvent(const std::string &dateStr);
     void saveToFile();
+    int findIndexDate(const std::string& dateStr);
 
 private:
     std::vector<Event> events_;

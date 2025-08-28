@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
+#include <vector>
 
 EventManager::EventManager(const std::string &filename) : filename_(filename)
 {
@@ -16,6 +17,78 @@ void EventManager::addEvents(std::chrono::sys_days date, const std::string &desc
     std::sort(events_.begin(), events_.end());
     saveToFile();
     std::cout << "Events to save successful!\n";
+}
+
+int EventManager::findIndexDate(const std::string& dateStr)
+{
+    try{
+        int findDate = 0;
+        auto targetDate = parseDate(dateStr);
+
+        for (size_t i = 0; i < events_.size(); i++)
+        {
+            if(events_[i].getDate() == targetDate)
+            {
+                findDate = static_cast<int>(i);
+                return static_cast<int>(i);
+            }
+        }
+        return -1;
+    } catch (const std::exception& e) {
+        std::cerr << "Invalid date format: " << e.what() << std::endl;
+        return -1;
+    }
+}
+
+void EventManager::deleteEvent(const std::string& dateStr)
+{
+    std::vector<int> RecurrDate;
+    int count = 0;
+    int targetEvent = findIndexDate(dateStr);
+    for (size_t i = 0; i < events_.size(); i++)
+    {
+        if (dateToString(events_[i].getDate()) == dateStr)
+        {
+            RecurrDate.push_back(i);
+        }
+    }
+
+    if (RecurrDate.size() > 1)
+    {
+        std::cout << "What event you want deleted?\n";
+        for (size_t i = 0; i < RecurrDate.size();)
+        {
+            size_t eventIndex = RecurrDate[i];
+            std::cout << ++i << ": " << events_[eventIndex].getDate() << " " << events_[eventIndex].getDescription() << std::endl;
+            count++;
+        }
+
+        int del;
+        std::cin >> del;
+        std::cin.ignore();
+        if (del > count || del < 0)
+        {
+            std::cerr << "Invalid number, please try again";
+            
+        }
+        else
+        {
+            events_.erase(events_.begin() + RecurrDate[del - 1]);
+            std::sort(events_.begin(), events_.end());
+            saveToFile();
+            std::cout << "Events deleted";
+        }
+    }
+    else
+    {
+        events_.erase(events_.begin() + targetEvent);
+            std::sort(events_.begin(), events_.end());
+            saveToFile();
+            std::cout << "Events deleted";
+    }
+
+    
+    
 }
 
 void EventManager::saveToFile()

@@ -15,9 +15,10 @@ int main()
         do
         {
 
-            std::cout << "1. add to events\n";
-            std::cout << "2. Print to events\n";
-            std::cout << "3. Save and exit\n";
+            std::cout << "1. Add to events\n";
+            std::cout << "2. Delete to events\n";
+            std::cout << "3. Print to events\n";
+            std::cout << "4. Save and exit\n";
 
             std::cin >> choice;
             std::cin.ignore();
@@ -47,8 +48,17 @@ int main()
                 }
                 break;
             }
-
             case 2:
+            {
+                std::cout << "print date for deleted\n";
+                std::string delDate;
+                std::cin >> delDate;
+                std::cout << std::endl;
+                manager.deleteEvent(delDate);
+                std::cout << "Events to deleted\n";
+                break;
+            }
+            case 3:
             {
 
                 try
@@ -83,7 +93,7 @@ int main()
                 std::cout << std::endl;
                 break;
             }
-            case 3:
+            case 4:
             {
 
                 manager.saveToFile();
@@ -98,7 +108,7 @@ int main()
             }
             }
 
-        } while (choice != 3);
+        } while (choice != 4);
     }
     catch (const std::exception &e)
     {
